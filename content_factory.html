@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Factory</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080808;--bg2:#0f0f0f;--bg3:#161616;--bg4:#1e1e1e;
+  --border:#222;--border2:#2c2c2c;--border3:#383838;
+  --text:#ede8e0;--muted:#5a5a5a;--muted2:#3a3a3a;
+  --accent:#e8ff47;--accent-dim:rgba(232,255,71,.12);
+  --red:#ff4545;--red-dim:rgba(255,69,69,.12);
+  --blue:#4da6ff;--blue-dim:rgba(77,166,255,.12);
+  --orange:#ff8c42;--orange-dim:rgba(255,140,66,.12);
+  --teal:#3affc8;--teal-dim:rgba(58,255,200,.1);
+  --purple:#a78bfa;--purple-dim:rgba(167,139,250,.12);
+  --font-head:'Bebas Neue',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(8,8,8,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:48px}
+.nav-brand{font-family:var(--font-head);font-size:22px;letter-spacing:.05em;color:var(--accent)}
+.nav-tabs{display:flex;gap:2px}
+.nav-tab{padding:6px 14px;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--font-body);transition:all .2s;border-radius:3px}
+.nav-tab:hover{color:var(--text);background:var(--bg3)}
+.nav-tab.active{color:var(--accent);background:var(--accent-dim)}
+
+/* PAGES */
+.page{display:none;padding:68px 0 60px;min-height:100vh}
+.page.active{display:block}
+.container{max-width:860px;margin:0 auto;padding:0 20px}
+
+/* TYPOGRAPHY */
+.page-title{font-family:var(--font-head);font-size:clamp(48px,8vw,80px);letter-spacing:.02em;line-height:.95;margin-bottom:8px}
+.page-title .hi{color:var(--accent)}
+.page-sub{font-size:13px;color:var(--muted);margin-bottom:32px;line-height:1.6}
+.section-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.section-title{font-size:18px;font-weight:600;margin-bottom:16px}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-bottom:10px}
+.card-sm{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:12px 14px}
+
+/* TAGS/BADGES */
+.tag{display:inline-block;font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:2px;border:1px solid}
+.tag-accent{color:var(--accent);border-color:rgba(232,255,71,.3);background:var(--accent-dim)}
+.tag-red{color:var(--red);border-color:rgba(255,69,69,.3);background:var(--red-dim)}
+.tag-blue{color:var(--blue);border-color:rgba(77,166,255,.3);background:var(--blue-dim)}
+.tag-orange{color:var(--orange);border-color:rgba(255,140,66,.3);background:var(--orange-dim)}
+.tag-teal{color:var(--teal);border-color:rgba(58,255,200,.3);background:var(--teal-dim)}
+.tag-purple{color:var(--purple);border-color:rgba(167,139,250,.3);background:var(--purple-dim)}
+
+/* INPUTS */
+textarea,input,select{
+  background:var(--bg3);border:1px solid var(--border2);border-radius:6px;
+  color:var(--text);font-family:var(--font-body);font-size:13px;
+  padding:10px 14px;width:100%;resize:vertical;outline:none;transition:border .2s
+}
+textarea:focus,input:focus,select:focus{border-color:var(--border3)}
+textarea{min-height:80px;line-height:1.6}
+select{cursor:pointer;height:38px;resize:none}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px;font-weight:500}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font-family:var(--font-body);font-size:13px;font-weight:500;border-radius:5px;border:1px solid var(--border2);background:var(--bg3);color:var(--text);cursor:pointer;transition:all .2s}
+.btn:hover{border-color:var(--border3);background:var(--bg4)}
+.btn-primary{background:var(--accent);color:#080808;border-color:var(--accent);font-weight:600}
+.btn-primary:hover{background:#d4e83f;border-color:#d4e83f}
+.btn-danger{background:var(--red-dim);color:var(--red);border-color:rgba(255,69,69,.3)}
+.btn-sm{padding:6px 12px;font-size:11px}
+.btn-icon{padding:8px;min-width:34px;justify-content:center}
+
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.gap-8{gap:8px}
+
+/* OUTPUT BOX */
+.output-box{
+  background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  padding:18px 20px;font-size:14px;line-height:1.75;color:var(--text);
+  min-height:80px;white-space:pre-wrap;word-break:break-word;
+  position:relative;transition:border .3s
+}
+.output-box.generating{border-color:var(--accent);animation:pulse 1.5s infinite}
+.output-box.done{border-color:rgba(58,255,200,.3)}
+@keyframes pulse{0%,100%{border-color:rgba(232,255,71,.3)}50%{border-color:var(--accent)}}
+
+/* OUTPUT ACTIONS */
+.output-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+
+/* VARIANTS */
+.variant-card{
+  background:var(--bg3);border:1px solid var(--border);border-radius:6px;
+  padding:14px 16px;margin-bottom:8px;position:relative;cursor:default
+}
+.variant-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.variant-label{font-family:var(--font-mono);font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.variant-text{font-size:13px;line-height:1.7;color:var(--text);white-space:pre-wrap}
+.variant-actions{display:flex;gap:6px;margin-top:10px}
+
+/* MEME LIBRARY */
+.meme-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:16px}
+.meme-slot{
+  background:var(--bg3);border:2px dashed var(--border2);border-radius:6px;
+  aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;position:relative;overflow:hidden
+}
+.meme-slot:hover{border-color:var(--border3);background:var(--bg4)}
+.meme-slot.filled{border-style:solid;border-color:var(--border2)}
+.meme-slot img,.meme-slot video{width:100%;height:100%;object-fit:cover;border-radius:4px}
+.meme-slot .meme-label{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(8,8,8,.85);padding:3px 6px;
+  font-size:9px;font-family:var(--font-mono);color:var(--muted);text-align:center;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+.meme-slot .meme-del{
+  position:absolute;top:3px;right:3px;background:var(--red);color:#fff;
+  border:none;border-radius:2px;font-size:9px;padding:1px 4px;cursor:pointer;display:none
+}
+.meme-slot:hover .meme-del{display:block}
+.meme-add-icon{font-size:20px;color:var(--muted2);margin-bottom:4px}
+.meme-add-text{font-size:10px;color:var(--muted);font-family:var(--font-mono)}
+
+/* PERFORMANCE */
+.perf-row{display:grid;grid-template-columns:1fr auto auto auto;gap:12px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border);font-size:13px}
+.perf-row:last-child{border-bottom:none}
+.perf-content{font-size:12px;color:var(--text);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.perf-num{font-family:var(--font-mono);font-size:12px;text-align:right}
+.perf-bar-wrap{height:4px;background:var(--bg4);border-radius:2px;width:60px}
+.perf-bar{height:4px;border-radius:2px;background:var(--accent)}
+
+/* IDENTITY PANEL */
+.identity-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--bg3);border:1px solid var(--border2);border-radius:4px;
+  padding:4px 10px;font-size:12px;margin:3px;cursor:default
+}
+.identity-chip .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+/* PILL SELECTOR */
+.pill-selector{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.pill{
+  padding:5px 12px;font-size:11px;font-weight:500;border-radius:20px;
+  border:1px solid var(--border2);color:var(--muted);background:var(--bg3);
+  cursor:pointer;transition:all .15s;font-family:var(--font-mono);letter-spacing:.04em
+}
+.pill:hover{border-color:var(--border3);color:var(--text)}
+.pill.active{background:var(--accent-dim);border-color:rgba(232,255,71,.4);color:var(--accent)}
+.pill.active-red{background:var(--red-dim);border-color:rgba(255,69,69,.4);color:var(--red)}
+.pill.active-blue{background:var(--blue-dim);border-color:rgba(77,166,255,.4);color:var(--blue)}
+.pill.active-orange{background:var(--orange-dim);border-color:rgba(255,140,66,.4);color:var(--orange)}
+.pill.active-purple{background:var(--purple-dim);border-color:rgba(167,139,250,.4);color:var(--purple)}
+.pill.active-teal{background:var(--teal-dim);border-color:rgba(58,255,200,.4);color:var(--teal)}
+
+/* DIVIDER */
+.divider{border:none;border-top:1px solid var(--border);margin:28px 0}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:20px;right:20px;z-index:999;
+  background:var(--bg3);border:1px solid var(--border2);border-radius:6px;
+  padding:10px 16px;font-size:12px;font-family:var(--font-mono);
+  color:var(--teal);opacity:0;transition:opacity .3s;pointer-events:none
+}
+#toast.show{opacity:1}
+
+/* LOADING */
+.loading-dots::after{content:'...';animation:dots 1.2s infinite}
+@keyframes dots{0%{content:'.'}40%{content:'..'}80%{content:'...'}100%{content:'.'}}
+
+/* CHAR COUNT */
+.char-count{font-family:var(--font-mono);font-size:10px;color:var(--muted);text-align:right;margin-top:4px}
+.char-count.over{color:var(--red)}
+
+/* SCROLLABLE */
+.scroll-y{overflow-y:auto;max-height:420px}
+.scroll-y::-webkit-scrollbar{width:2px}
+.scroll-y::-webkit-scrollbar-thumb{background:var(--border2)}
+
+/* TABS INNER */
+.inner-tabs{display:flex;gap:2px;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:0}
+.inner-tab{padding:8px 16px;font-size:12px;font-weight:500;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--font-body);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
+.inner-tab:hover{color:var(--text)}
+.inner-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* CONTEXT HISTORY */
+.ctx-item{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin-bottom:6px;font-size:12px;color:var(--muted);display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.ctx-item-text{flex:1;line-height:1.5}
+.ctx-item-meta{font-family:var(--font-mono);font-size:10px;color:var(--muted2);flex-shrink:0;text-align:right}
+
+/* STAT CARDS */
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center}
+.stat-num{font-family:var(--font-head);font-size:36px;color:var(--accent)}
+.stat-label{font-size:11px;color:var(--muted);margin-top:2px;font-family:var(--font-mono);letter-spacing:.06em;text-transform:uppercase}
+
+/* GM SELECTOR */
+.gm-option{
+  border:1px solid var(--border);border-radius:6px;padding:12px 16px;cursor:pointer;
+  transition:all .2s;margin-bottom:6px;background:var(--bg2)
+}
+.gm-option:hover{border-color:var(--border2);background:var(--bg3)}
+.gm-option.selected{border-color:rgba(232,255,71,.4);background:var(--accent-dim)}
+.gm-title{font-size:13px;font-weight:600;margin-bottom:4px}
+.gm-preview{font-size:12px;color:var(--muted);font-style:italic}
+
+/* IDENTITY BUILDER */
+.identity-section{margin-bottom:20px}
+.identity-title{font-size:14px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+
+/* REPLY DNA */
+.dna-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.dna-row:last-child{border-bottom:none}
+.dna-key{font-family:var(--font-mono);font-size:11px;color:var(--muted);min-width:100px;flex-shrink:0;padding-top:2px}
+.dna-val{font-size:12px;color:var(--text);line-height:1.6}
+
+/* ANIMATE IN */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeUp .4s ease both}
+
+/* HIGHLIGHT */
+.hl-accent{color:var(--accent)}
+.hl-red{color:var(--red)}
+.hl-muted{color:var(--muted)}
+
+/* SPINNY */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin .8s linear infinite;display:inline-block}
+
+.flex{display:flex}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-8{gap:8px}.gap-12{gap:12px}.gap-16{gap:16px}.flex-1{flex:1}.flex-wrap{flex-wrap:wrap}.mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}.mt-20{margin-top:20px}.mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}.mb-16{margin-bottom:16px}.mb-20{margin-bottom:20px}
+
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast">copied to clipboard</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">FACTORY</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('post')">Post Gen</button>
+    <button class="nav-tab" onclick="showPage('reply')">Reply Gen</button>
+    <button class="nav-tab" onclick="showPage('memes')">Meme Vault</button>
+    <button class="nav-tab" onclick="showPage('gm')">GM / Events</button>
+    <button class="nav-tab" onclick="showPage('tracker')">Tracker</button>
+    <button class="nav-tab" onclick="showPage('identity')">Identity</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════ POST GEN ═══════════════════════════ -->
+<div class="page active" id="page-post">
+<div class="container">
+  <div style="padding-top:32px">
+    <div class="page-title">POST<br><span class="hi">FACTORY</span></div>
+    <div class="page-sub">Drop any context. Get a post that makes you win.</div>
+  </div>
+
+  <!-- CONTEXT INPUT -->
+  <div class="card">
+    <div class="section-label" style="margin-bottom:8px">Context input</div>
+    <textarea id="post-context" placeholder="Drop anything here — something you saw today, a current event, another post, a feeling, a win, a random thought, a meme idea, something that's been bugging you..." rows="4"></textarea>
+    <div class="char-count" id="ctx-char">0 / 280</div>
+
+    <div class="divider" style="margin:14px 0"></div>
+
+    <!-- CONTEXT TYPE -->
+    <div class="section-label">What kind of context is this?</div>
+    <div class="pill-selector" id="ctx-type-pills">
+      <div class="pill active" data-val="current-event">Current event</div>
+      <div class="pill" data-val="post-contrast">Post contrast</div>
+      <div class="pill" data-val="personal-win">Personal win</div>
+      <div class="pill" data-val="larp">Larp moment</div>
+      <div class="pill" data-val="meme-pov">Meme POV</div>
+      <div class="pill" data-val="rant">Rant / bugging me</div>
+      <div class="pill" data-val="gm-event">GM / Event</div>
+      <div class="pill" data-val="observation">Observation</div>
+      <div class="pill" data-val="bait">Bait</div>
+      <div class="pill" data-val="alpha">Alpha / Gem</div>
+    </div>
+
+    <!-- POST FORMAT -->
+    <div class="section-label mt-12">Post format</div>
+    <div class="pill-selector" id="format-pills">
+      <div class="pill active" data-val="win-drop">Win drop</div>
+      <div class="pill" data-val="gem">Gem / insight</div>
+      <div class="pill" data-val="ragebait">Ragebait</div>
+      <div class="pill" data-val="lore">Lore drop</div>
+      <div class="pill" data-val="question">Question bait</div>
+      <div class="pill" data-val="pov">POV / meme</div>
+      <div class="pill" data-val="provocative">Provocative</div>
+      <div class="pill" data-val="cringe">Cringe (own it)</div>
+    </div>
+
+    <!-- TONE -->
+    <div class="section-label mt-12">Tone</div>
+    <div class="pill-selector" id="tone-pills">
+      <div class="pill active" data-val="casual-confident">Casual confident</div>
+      <div class="pill" data-val="unhinged">Unhinged</div>
+      <div class="pill" data-val="deadpan">Deadpan</div>
+      <div class="pill" data-val="self-aware">Self-aware</div>
+      <div class="pill" data-val="menacing">Menacing</div>
+      <div class="pill" data-val="absurd">Absurd</div>
+    </div>
+
+    <!-- WIN FRAME -->
+    <div class="section-label mt-12">Win frame</div>
+    <div class="pill-selector" id="win-pills">
+      <div class="pill active" data-val="real">Real win</div>
+      <div class="pill" data-val="pseudo">Pseudo win</div>
+      <div class="pill" data-val="made-up">Made-up win</div>
+      <div class="pill" data-val="none">No win frame</div>
+    </div>
+
+    <div class="mt-16 flex gap-8 flex-wrap">
+      <button class="btn btn-primary" onclick="generatePost()">Generate posts ↗</button>
+      <button class="btn btn-sm" onclick="clearPostInputs()">Clear</button>
+      <div style="flex:1"></div>
+      <div style="font-size:11px;color:var(--muted);align-self:center;font-family:var(--font-mono)">generates 3 variants</div>
+    </div>
+  </div>
+
+  <!-- OUTPUT -->
+  <div id="post-output" style="display:none">
+    <div class="section-label mt-20 mb-12">Generated variants</div>
+    <div id="post-variants"></div>
+
+    <div class="card mt-16" style="border-color:rgba(167,139,250,.2)">
+      <div class="section-label mb-8">Meme suggestion</div>
+      <div id="meme-suggestion" style="font-size:13px;color:var(--muted);line-height:1.6"></div>
+      <div class="mt-8">
+        <button class="btn btn-sm" onclick="showPage('memes')">Open meme vault ↗</button>
+      </div>
+    </div>
+
+    <div class="card mt-10" style="border-color:rgba(58,255,200,.15)">
+      <div class="section-label mb-8">Algo notes</div>
+      <div id="algo-notes" style="font-size:12px;color:var(--muted);line-height:1.6"></div>
+    </div>
+  </div>
+
+  <!-- CONTEXT HISTORY -->
+  <div class="divider"></div>
+  <div class="section-label">Recent context history</div>
+  <div id="ctx-history" style="margin-top:8px"></div>
+  <div style="font-size:11px;color:var(--muted2);margin-top:8px;font-family:var(--font-mono)">auto-saved locally — feeds into your identity over time</div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════ REPLY GEN ═══════════════════════════ -->
+<div class="page" id="page-reply">
+<div class="container">
+  <div style="padding-top:32px">
+    <div class="page-title">REPLY<br><span class="hi">ENGINE</span></div>
+    <div class="page-sub">Paste any post. Pick your angle. Get a reply that lands.</div>
+  </div>
+
+  <div class="card">
+    <div class="section-label mb-8">The post you're replying to</div>
+    <textarea id="reply-target" placeholder="Paste the post here..." rows="3"></textarea>
+
+    <div class="divider" style="margin:14px 0"></div>
+
+    <!-- POST TYPE -->
+    <div class="section-label">Post type</div>
+    <div class="pill-selector" id="post-type-pills">
+      <div class="pill active" data-val="banger">Banger (10k+ likes)</div>
+      <div class="pill" data-val="web3-update">Web3 update</div>
+      <div class="pill" data-val="design-update">Design update</div>
+      <div class="pill" data-val="dev-drop">Dev drop</div>
+      <div class="pill" data-val="ai-ugc">AI / UGC</div>
+      <div class="pill" data-val="project-news">Project news</div>
+      <div class="pill" data-val="hot-take">Hot take</div>
+      <div class="pill" data-val="drama">Drama / tea</div>
+      <div class="pill" data-val="meme">Meme post</div>
+    </div>
+
+    <!-- REPLY ANGLE -->
+    <div class="section-label mt-12">Angle</div>
+    <div class="pill-selector" id="angle-pills">
+      <div class="pill active" data-val="add-on-top">Add on top</div>
+      <div class="pill" data-val="criticize">Criticize</div>
+      <div class="pill" data-val="congrats">Congrats (make it yours)</div>
+      <div class="pill" data-val="funny">Funny</div>
+      <div class="pill" data-val="cringe">Cringe (own it)</div>
+      <div class="pill" data-val="contrarian">Contrarian</div>
+      <div class="pill" data-val="ragebait">Start an argument</div>
+      <div class="pill" data-val="compliment-flip">Compliment flip</div>
+    </div>
+
+    <!-- REPLY TONE -->
+    <div class="section-label mt-12">Tone</div>
+    <div class="pill-selector" id="reply-tone-pills">
+      <div class="pill active" data-val="casual">Casual</div>
+      <div class="pill" data-val="confident">Confident</div>
+      <div class="pill" data-val="deadpan">Deadpan</div>
+      <div class="pill" data-val="menacing">Low-key menacing</div>
+      <div class="pill" data-val="chaotic">Chaotic</div>
+      <div class="pill" data-val="genuine">Genuine</div>
+    </div>
+
+    <!-- GOAL -->
+    <div class="section-label mt-12">What do you want to happen</div>
+    <div class="pill-selector" id="goal-pills">
+      <div class="pill active" data-val="profile-clicks">Profile clicks</div>
+      <div class="pill" data-val="start-debate">Start a debate</div>
+      <div class="pill" data-val="get-likes">Get likes</div>
+      <div class="pill" data-val="get-follows">Get follows</div>
+      <div class="pill" data-val="impression-steal">Steal impressions from banger</div>
+    </div>
+
+    <div class="mt-16 flex gap-8">
+      <button class="btn btn-primary" onclick="generateReply()">Generate replies ↗</button>
+      <button class="btn btn-sm" onclick="clearReplyInputs()">Clear</button>
+    </div>
+  </div>
+
+  <!-- REPLY COMPONENTS (always visible) -->
+  <div class="card mt-10" style="border-color:var(--border2)">
+    <div class="section-label mb-12">What makes a reply slap</div>
+    <div class="dna-row">
+      <div class="dna-key">First 5 words</div>
+      <div class="dna-val">Must stop the scroll. No "great post!" No agreeing immediately. Start mid-thought or with a counter-frame.</div>
+    </div>
+    <div class="dna-row">
+      <div class="dna-key">Length</div>
+      <div class="dna-val">1–2 sentences max. The shorter the more confident it reads. Exceptions: value-add replies can be 3–4 sentences.</div>
+    </div>
+    <div class="dna-row">
+      <div class="dna-key">No hedging</div>
+      <div class="dna-val">Never "I think", "imo", "maybe". Say the thing. Confidence = engagement. Doubt = scroll past.</div>
+    </div>
+    <div class="dna-row">
+      <div class="dna-key">Make them reply</div>
+      <div class="dna-val">Every reply should contain something slightly off, incomplete, or provocative enough that the OP or thread has to respond.</div>
+    </div>
+    <div class="dna-row">
+      <div class="dna-key">Meme energy</div>
+      <div class="dna-val">Emoji at the right place = emotional punctuation. Not decoration. 1–2 max. Don't announce the joke.</div>
+    </div>
+    <div class="dna-row">
+      <div class="dna-key">Timing</div>
+      <div class="dna-val">On a banger: reply within the first hour. Your reply rides the wave. After 6hrs = dead engagement.</div>
+    </div>
+  </div>
+
+  <!-- REPLY OUTPUT -->
+  <div id="reply-output" style="display:none">
+    <div class="section-label mt-20 mb-12">Generated replies</div>
+    <div id="reply-variants"></div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════ MEME VAULT ═══════════════════════════ -->
+<div class="page" id="page-memes">
+<div class="container">
+  <div style="padding-top:32px">
+    <div class="page-title">MEME<br><span class="hi">VAULT</span></div>
+    <div class="page-sub">Your hand-picked meme arsenal. Each one tagged to an expression/mood. Referenced in post generation.</div>
+  </div>
+
+  <div class="card">
+    <div class="flex items-center justify-between mb-16">
+      <div class="section-label" style="margin:0">Add meme / media</div>
+      <button class="btn btn-primary btn-sm" onclick="document.getElementById('meme-upload').click()">+ Upload</button>
+    </div>
+    <input type="file" id="meme-upload" accept="image/*,video/*,.gif" multiple style="display:none" onchange="handleMemeUpload(this)">
+
+    <!-- Expression categories -->
+    <div class="inner-tabs">
+      <button class="inner-tab active" onclick="filterMemes('all',this)">All</button>
+      <button class="inner-tab" onclick="filterMemes('winning',this)">Winning</button>
+      <button class="inner-tab" onclick="filterMemes('unbothered',this)">Unbothered</button>
+      <button class="inner-tab" onclick="filterMemes('chaos',this)">Chaos</button>
+      <button class="inner-tab" onclick="filterMemes('disappointment',this)">Disappointed</button>
+      <button class="inner-tab" onclick="filterMemes('thinking',this)">Thinking</button>
+      <button class="inner-tab" onclick="filterMemes('hype',this)">Hype</button>
+      <button class="inner-tab" onclick="filterMemes('other',this)">Other</button>
+    </div>
+
+    <div class="meme-grid" id="meme-grid"></div>
+
+    <div style="font-size:11px;color:var(--muted2);font-family:var(--font-mono)">
+      stored locally in browser · upload pics, gifs, or mp4s
+    </div>
+  </div>
+
+  <!-- Meme tagging modal -->
+  <div id="meme-tag-modal" style="display:none">
+    <div class="card" style="border-color:rgba(232,255,71,.3)">
+      <div class="section-label mb-8">Tag this meme</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px">What expression / moment is this for?</div>
+      <div class="pill-selector" id="meme-expr-pills">
+        <div class="pill" data-val="winning">Winning</div>
+        <div class="pill" data-val="unbothered">Unbothered</div>
+        <div class="pill" data-val="chaos">Chaos</div>
+        <div class="pill" data-val="disappointment">Disappointed</div>
+        <div class="pill" data-val="thinking">Thinking</div>
+        <div class="pill" data-val="hype">Hype</div>
+        <div class="pill" data-val="other">Other</div>
+      </div>
+      <input type="text" id="meme-tag-name" placeholder="Short label e.g. 'when it hits different'" style="margin-bottom:10px">
+      <div class="flex gap-8">
+        <button class="btn btn-primary btn-sm" onclick="saveMemeTag()">Save</button>
+        <button class="btn btn-sm" onclick="cancelMemeTag()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Meme usage guide -->
+  <div class="card mt-10">
+    <div class="section-label mb-12">How to use your vault</div>
+    <div class="dna-row">
+      <div class="dna-key">Winning</div>
+      <div class="dna-val">Use on win drops, real wins, pseudo wins. The meme = social proof without saying it directly.</div>
+    </div>
+    <div class="dna-row">
+      <div class="dna-key">Unbothered</div>
+      <div class="dna-val">After drama, after criticism, after being ignored. The "I'm at peace" energy. Deleted her number vibes.</div>
+    </div>
+    <div class="dna-row">
+      <div class="dna-key">Chaos</div>
+      <div class="dna-val">Ragebait posts, CT commentary, market memes. The unhinged moment that makes people quote you.</div>
+    </div>
+    <div class="dna-row">
+      <div class="dna-key">Disappointed</div>
+      <div class="dna-val">"My brain after I broke my trading rules again" format. Self-aware failure posts. High relatability.</div>
+    </div>
+    <div class="dna-row">
+      <div class="dna-key">Thinking</div>
+      <div class="dna-val">Observations, philosophical takes, the "bro why does every web3 discord have the same 4 people" moment.</div>
+    </div>
+    <div class="dna-row">
+      <div class="dna-key">Hype</div>
+      <div class="dna-val">Project launches, big updates, things you're excited about. Don't oversell — let the meme do it.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════ GM / EVENTS ═══════════════════════════ -->
+<div class="page" id="page-gm">
+<div class="container">
+  <div style="padding-top:32px">
+    <div class="page-title">GM &<br><span class="hi">EVENTS</span></div>
+    <div class="page-sub">Never say "gm" like a bot again. Event posts that actually hit.</div>
+  </div>
+
+  <div class="inner-tabs">
+    <button class="inner-tab active" onclick="switchGmTab('gm-replace',this)">GM replacement</button>
+    <button class="inner-tab" onclick="switchGmTab('new-month',this)">New month</button>
+    <button class="inner-tab" onclick="switchGmTab('quarter',this)">Quarter</button>
+    <button class="inner-tab" onclick="switchGmTab('milestone',this)">Milestone</button>
+    <button class="inner-tab" onclick="switchGmTab('custom-event',this)">Custom</button>
+  </div>
+
+  <div id="gm-replace" class="gm-tab">
+    <div class="section-label mb-12">GM replacements — pick your opener for today</div>
+    <div id="gm-options">
+      <div class="gm-option selected" onclick="selectGm(this,'you don\'t need april fool — your life is already a joke')">
+        <div class="gm-title">The mirror</div>
+        <div class="gm-preview">"you don't need april fool — your life is already a joke"</div>
+      </div>
+      <div class="gm-option" onclick="selectGm(this,'')">
+        <div class="gm-title">How much have you made this month?</div>
+        <div class="gm-preview">"How much have you make this month? Me: [screenshot of whatever you made, even $3]"</div>
+      </div>
+      <div class="gm-option" onclick="selectGm(this,'')">
+        <div class="gm-title">The bait poll</div>
+        <div class="gm-preview">"which one do you need badly — [option A] or [option B]" — no GM, pure engagement</div>
+      </div>
+      <div class="gm-option" onclick="selectGm(this,'')">
+        <div class="gm-title">The observation</div>
+        <div class="gm-preview">Post an observation about whatever you noticed this morning. No greeting. Just drop it.</div>
+      </div>
+      <div class="gm-option" onclick="selectGm(this,'')">
+        <div class="gm-title">Things are loading</div>
+        <div class="gm-preview">"things plenty to try out for this world o" + media of something wild/fun happening</div>
+      </div>
+    </div>
+    <div class="mt-16">
+      <button class="btn btn-primary" onclick="generateGm()">Generate my GM for today ↗</button>
+    </div>
+    <div id="gm-output" style="display:none;margin-top:16px">
+      <div class="output-box" id="gm-text"></div>
+      <div class="output-actions">
+        <button class="btn btn-sm" onclick="copyText('gm-text')">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="new-month" class="gm-tab" style="display:none">
+    <div class="section-label mb-12">New month post generator</div>
+    <div class="grid2 mb-12">
+      <div>
+        <label>Month entering</label>
+        <input type="text" id="nm-month" placeholder="e.g. May">
+      </div>
+      <div>
+        <label>Your honest situation right now</label>
+        <input type="text" id="nm-situation" placeholder="e.g. broke but building, hit 2k followers">
+      </div>
+    </div>
+    <div>
+      <label>Something you're manifesting this month</label>
+      <input type="text" id="nm-manifest" placeholder="e.g. first web3 client, 500 new followers">
+    </div>
+    <div class="mt-12">
+      <button class="btn btn-primary" onclick="generateNewMonth()">Generate new month post ↗</button>
+    </div>
+    <div id="nm-output" style="display:none;margin-top:16px">
+      <div class="output-box" id="nm-text"></div>
+      <div class="output-actions"><button class="btn btn-sm" onclick="copyText('nm-text')">Copy</button></div>
+    </div>
+  </div>
+
+  <div id="quarter" class="gm-tab" style="display:none">
+    <div class="section-label mb-12">Quarter post generator</div>
+    <div class="grid2 mb-12">
+      <div>
+        <label>Quarter (e.g. Q2 2026)</label>
+        <input type="text" id="q-quarter" placeholder="Q2 2026">
+      </div>
+      <div>
+        <label>How did last quarter go? (honest)</label>
+        <input type="text" id="q-last" placeholder="e.g. slow start, picked up in March">
+      </div>
+    </div>
+    <div>
+      <label>What's the plan this quarter</label>
+      <input type="text" id="q-plan" placeholder="e.g. 1K followers, first client, ship the design portfolio">
+    </div>
+    <div class="mt-12">
+      <button class="btn btn-primary" onclick="generateQuarter()">Generate quarter post ↗</button>
+    </div>
+    <div id="q-output" style="display:none;margin-top:16px">
+      <div class="output-box" id="q-text"></div>
+      <div class="output-actions"><button class="btn btn-sm" onclick="copyText('q-text')">Copy</button></div>
+    </div>
+  </div>
+
+  <div id="milestone" class="gm-tab" style="display:none">
+    <div class="section-label mb-12">Milestone / achievement post</div>
+    <div class="grid2 mb-12">
+      <div>
+        <label>The milestone</label>
+        <input type="text" id="ms-milestone" placeholder="e.g. 1K followers, first $100 in web3">
+      </div>
+      <div>
+        <label>Win type</label>
+        <select id="ms-type">
+          <option value="real">Real win</option>
+          <option value="pseudo">Pseudo win</option>
+          <option value="made-up">Made-up win</option>
+        </select>
+      </div>
+    </div>
+    <label>Add some context or feeling</label>
+    <input type="text" id="ms-context" placeholder="e.g. took 3 months, didn't even plan for this">
+    <div class="mt-12">
+      <button class="btn btn-primary" onclick="generateMilestone()">Generate milestone post ↗</button>
+    </div>
+    <div id="ms-output" style="display:none;margin-top:16px">
+      <div class="output-box" id="ms-text"></div>
+      <div class="output-actions"><button class="btn btn-sm" onclick="copyText('ms-text')">Copy</button></div>
+    </div>
+  </div>
+
+  <div id="custom-event" class="gm-tab" style="display:none">
+    <div class="section-label mb-12">Custom event / moment post</div>
+    <label>What happened / what's the event</label>
+    <textarea id="ce-event" placeholder="e.g. I just finished building my first smart contract, it's a thing day, something I accomplished" rows="2"></textarea>
+    <div class="grid2 mt-10 mb-10">
+      <div>
+        <label>Tone</label>
+        <select id="ce-tone">
+          <option value="casual-win">Casual win</option>
+          <option value="unhinged-confident">Unhinged confident</option>
+          <option value="deadpan">Deadpan</option>
+          <option value="self-aware">Self-aware</option>
+        </select>
+      </div>
+      <div>
+        <label>Win frame</label>
+        <select id="ce-win">
+          <option value="real">Real win</option>
+          <option value="pseudo">Pseudo win</option>
+          <option value="made-up">Made-up win</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="generateCustomEvent()">Generate event post ↗</button>
+    <div id="ce-output" style="display:none;margin-top:16px">
+      <div class="output-box" id="ce-text"></div>
+      <div class="output-actions"><button class="btn btn-sm" onclick="copyText('ce-text')">Copy</button></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════ TRACKER ═══════════════════════════ -->
+<div class="page" id="page-tracker">
+<div class="container">
+  <div style="padding-top:32px">
+    <div class="page-title">PERF<br><span class="hi">TRACKER</span></div>
+    <div class="page-sub">Log posts, track what hits. The machine learns your patterns.</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="grid3 mb-20">
+    <div class="stat-card">
+      <div class="stat-num" id="stat-posts">0</div>
+      <div class="stat-label">Posts logged</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-avg">–</div>
+      <div class="stat-label">Avg. likes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-best-format">–</div>
+      <div class="stat-label">Best format</div>
+    </div>
+  </div>
+
+  <!-- LOG A POST -->
+  <div class="card">
+    <div class="section-label mb-12">Log a post</div>
+    <label>Post content (what you actually posted)</label>
+    <textarea id="log-content" placeholder="Paste the post here..." rows="2"></textarea>
+    <div class="grid3 mt-10 mb-10">
+      <div>
+        <label>Format used</label>
+        <select id="log-format">
+          <option>Win drop</option>
+          <option>Gem</option>
+          <option>Ragebait</option>
+          <option>Lore drop</option>
+          <option>Question bait</option>
+          <option>POV / meme</option>
+          <option>Provocative</option>
+          <option>Reply</option>
+          <option>GM replacement</option>
+        </select>
+      </div>
+      <div>
+        <label>Likes</label>
+        <input type="number" id="log-likes" placeholder="0" min="0">
+      </div>
+      <div>
+        <label>Replies</label>
+        <input type="number" id="log-replies" placeholder="0" min="0">
+      </div>
+    </div>
+    <div class="grid2 mb-10">
+      <div>
+        <label>Impressions</label>
+        <input type="number" id="log-impressions" placeholder="0" min="0">
+      </div>
+      <div>
+        <label>Did it work?</label>
+        <select id="log-worked">
+          <option value="banger">Banger</option>
+          <option value="good">Good</option>
+          <option value="mid">Mid</option>
+          <option value="flop">Flop</option>
+        </select>
+      </div>
+    </div>
+    <label>Notes (what made it work / flop?)</label>
+    <input type="text" id="log-notes" placeholder="e.g. posted too late, tone was off, meme elevated it">
+    <div class="mt-12">
+      <button class="btn btn-primary" onclick="logPost()">Log post</button>
+    </div>
+  </div>
+
+  <!-- POST LOG -->
+  <div class="card mt-10">
+    <div class="flex items-center justify-between mb-12">
+      <div class="section-label" style="margin:0">Post log</div>
+      <button class="btn btn-sm btn-danger" onclick="clearLog()">Clear all</button>
+    </div>
+    <div class="scroll-y" id="post-log">
+      <div style="text-align:center;padding:32px;color:var(--muted2);font-size:12px;font-family:var(--font-mono)">No posts logged yet</div>
+    </div>
+  </div>
+
+  <!-- WHAT'S WORKING -->
+  <div class="card mt-10" style="border-color:rgba(232,255,71,.15)">
+    <div class="section-label mb-12">Pattern analysis</div>
+    <div id="pattern-analysis" style="font-size:13px;color:var(--muted);line-height:1.8">
+      Log at least 5 posts to see patterns emerge.
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════ IDENTITY ═══════════════════════════ -->
+<div class="page" id="page-identity">
+<div class="container">
+  <div style="padding-top:32px">
+    <div class="page-title">YOUR<br><span class="hi">IDENTITY</span></div>
+    <div class="page-sub">The DNA the machine uses to keep your voice consistent. Customize this — it feeds every generation.</div>
+  </div>
+
+  <!-- IDENTITY CORE -->
+  <div class="card">
+    <div class="section-label mb-12">Core identity parameters</div>
+
+    <div class="identity-section">
+      <div class="identity-title"><span class="tag tag-accent">Voice</span> How you speak</div>
+      <div class="pill-selector" id="voice-pills">
+        <div class="pill active" data-val="casual-nigerian">Casual English (NG flavor)</div>
+        <div class="pill" data-val="ct-slang">CT slang</div>
+        <div class="pill" data-val="gen-z">Gen-Z internet</div>
+        <div class="pill" data-val="no-fluff">No fluff / blunt</div>
+        <div class="pill" data-val="self-aware">Self-aware</div>
+      </div>
+    </div>
+
+    <div class="identity-section">
+      <div class="identity-title"><span class="tag tag-red">Persona</span> Your archetype</div>
+      <div class="pill-selector" id="persona-pills">
+        <div class="pill active" data-val="winning-guy">Always winning guy</div>
+        <div class="pill" data-val="menace">Controlled menace</div>
+        <div class="pill" data-val="insider">Insider who drops gems</div>
+        <div class="pill" data-val="chaos-agent">Chaos agent</div>
+        <div class="pill" data-val="builder">Quiet builder</div>
+      </div>
+    </div>
+
+    <div class="identity-section">
+      <div class="identity-title"><span class="tag tag-blue">Niche</span> What you're about</div>
+      <div class="pill-selector" id="niche-pills">
+        <div class="pill active" data-val="web3">Web3</div>
+        <div class="pill active" data-val="design">Design</div>
+        <div class="pill active" data-val="dev">Dev</div>
+        <div class="pill active" data-val="farming">Farming</div>
+        <div class="pill" data-val="ai">AI</div>
+        <div class="pill" data-val="writing">Writing</div>
+        <div class="pill" data-val="ct-lore">CT lore / larp</div>
+      </div>
+    </div>
+
+    <div class="identity-section">
+      <div class="identity-title"><span class="tag tag-orange">Rules</span> What you never do</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px" id="never-do-list">
+        <div class="identity-chip"><span class="dot" style="background:var(--red)"></span>Never say gm</div>
+        <div class="identity-chip"><span class="dot" style="background:var(--red)"></span>Never beg for follows</div>
+        <div class="identity-chip"><span class="dot" style="background:var(--red)"></span>Never over-explain the joke</div>
+        <div class="identity-chip"><span class="dot" style="background:var(--red)"></span>Never hedge opinions</div>
+        <div class="identity-chip"><span class="dot" style="background:var(--red)"></span>Never post filler</div>
+      </div>
+      <div class="flex gap-8">
+        <input type="text" id="new-rule" placeholder="Add a rule..." style="flex:1">
+        <button class="btn btn-sm" onclick="addRule()">Add</button>
+      </div>
+    </div>
+
+    <div class="identity-section">
+      <div class="identity-title"><span class="tag tag-teal">Win Mode</span> The narrative you run</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7;background:var(--bg3);padding:12px;border-radius:6px">
+        Every post = a version of winning. Real wins get farmed to death. Pseudo wins reframe reality. Made-up wins conjure the narrative. You always have the last laugh. You never lose on your own timeline.
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD CONTEXT FEED -->
+  <div class="card mt-10">
+    <div class="section-label mb-12">Context feed — add references</div>
+    <div class="page-sub" style="margin-bottom:12px">Drop examples of posts you like, phrases that feel like you, or patterns you want the machine to learn.</div>
+    <textarea id="ctx-feed-input" placeholder="Paste a post you like, a phrase that sounds like you, a pattern you noticed..." rows="3"></textarea>
+    <div class="flex gap-8 mt-10">
+      <button class="btn btn-primary btn-sm" onclick="addContextFeed()">Add to feed</button>
+    </div>
+    <div class="mt-12" id="ctx-feed-list"></div>
+  </div>
+
+  <!-- IDENTITY SUMMARY -->
+  <div class="card mt-10" style="border-color:rgba(232,255,71,.2)">
+    <div class="section-label mb-12">Live identity summary</div>
+    <div id="identity-summary" style="font-size:13px;line-height:1.8;color:var(--muted)"></div>
+  </div>
+
+</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+const CONFIG = {
+  GEMINI_KEY: 'AIzaSyCCLMdDLj7i3YpIj6x5qZ-J_Xe7oddevH8',
+  CLOUDINARY_CLOUD_NAME: 'dago0wdns',
+  CLOUDINARY_PRESET: 'content factory',
+  SUPABASE_KEY: 'sb_publishable_z7-xfM6WGHtcnRE6Nq85Ng_8bAPGnXz',
+  SUPABASE_URL: '', // Placeholder — add your project URL here
+};
+
+const STATE = {
+  ctxHistory: JSON.parse(localStorage.getItem('ctx_history')||'[]'),
+  postLog: JSON.parse(localStorage.getItem('post_log')||'[]'),
+  memes: JSON.parse(localStorage.getItem('memes')||'[]'),
+  ctxFeed: JSON.parse(localStorage.getItem('ctx_feed')||'[]'),
+  neverDo: JSON.parse(localStorage.getItem('never_do')||'["Never say gm","Never beg for follows","Never over-explain the joke","Never hedge opinions","Never post filler"]'),
+  pendingMeme: null,
+  gmSelected: 'you don\'t need april fool — your life is already a joke',
+};
+
+function save(key, val){ localStorage.setItem(key, JSON.stringify(val)) }
+function saveState(){ save('ctx_history',STATE.ctxHistory);save('post_log',STATE.postLog);save('memes',STATE.memes);save('ctx_feed',STATE.ctxFeed);save('never_do',STATE.neverDo) }
+
+// ═══════════════════════════════════════════════════════════════
+// AI API HELPERS
+// ═══════════════════════════════════════════════════════════════
+async function callGemini(systemPrompt, userContext) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${CONFIG.GEMINI_KEY}`;
+  
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{
+        parts: [{ text: `${systemPrompt}\n\nUSER CONTEXT: ${userContext}` }]
+      }]
+    })
+  });
+
+  const data = await response.json();
+  if (data.error) {
+    console.error('Gemini API Error:', data.error);
+    throw new Error(data.error.message || 'AI Generation failed');
+  }
+  
+  return data.candidates[0].content.parts[0].text;
+}
+
+const IDENTITY_DNA = () => `
+IDENTITY:
+- Voice: ${getPillVal('voice-pills') || 'Casual English with CT/Gen-Z slang. Short sentences. No hedging. Confident always.'}
+- Persona: ${getPillVal('persona-pills') || 'Always winning guy. Never visibly loses on the TL.'}
+- Niche: ${getPillVal('niche-pills') || 'Web3, Design, Dev, Farming, Writing, CT lore/larp'}
+- Rules: ${STATE.neverDo.join(' · ')}
+- Context Feed: ${STATE.ctxFeed.slice(0,5).map(f=>f.text).join(' | ')}
+`;
+
+// ═══════════════════════════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════════════════════════
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const tabs = document.querySelectorAll('.nav-tab');
+  const pageMap = {post:0,reply:1,memes:2,gm:3,tracker:4,identity:5};
+  tabs[pageMap[id]].classList.add('active');
+  if(id==='tracker') renderTracker();
+  if(id==='identity') renderIdentitySummary();
+  if(id==='memes') renderMemeGrid();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PILLS (single select per group)
+// ═══════════════════════════════════════════════════════════════
+function initPills(){
+  document.querySelectorAll('.pill-selector').forEach(sel=>{
+    const multi = sel.id === 'niche-pills' || sel.id === 'voice-pills' || sel.id === 'persona-pills';
+    sel.querySelectorAll('.pill').forEach(p=>{
+      p.addEventListener('click',function(){
+        if(multi){
+          this.classList.toggle('active');
+        } else {
+          sel.querySelectorAll('.pill').forEach(x=>x.classList.remove('active','active-red','active-blue','active-orange','active-purple','active-teal'));
+          this.classList.add('active');
+        }
+      });
+    });
+  });
+}
+
+function getPillVal(selId){
+  const sel = document.getElementById(selId);
+  if(!sel) return '';
+  const actives = [...sel.querySelectorAll('.pill.active')];
+  return actives.map(p=>p.dataset.val).join(', ');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CHAR COUNT
+// ═══════════════════════════════════════════════════════════════
+document.getElementById('post-context').addEventListener('input',function(){
+  const cc = document.getElementById('ctx-char');
+  const l = this.value.length;
+  cc.textContent = l+' / 280';
+  cc.classList.toggle('over', l>280);
+});
+
+// ═══════════════════════════════════════════════════════════════
+// POST GENERATION ENGINE
+// ═══════════════════════════════════════════════════════════════
+async function generatePost(){
+  const ctx = document.getElementById('post-context').value.trim();
+  if(!ctx){ showToast('Add some context first'); return; }
+
+  const ctxType = getPillVal('ctx-type-pills');
+  const format = getPillVal('format-pills');
+  const tone = getPillVal('tone-pills');
+  const winFrame = getPillVal('win-pills');
+
+  // save to context history
+  STATE.ctxHistory.unshift({ text: ctx, type: ctxType, ts: Date.now() });
+  if(STATE.ctxHistory.length > 20) STATE.ctxHistory.pop();
+  saveState();
+  renderCtxHistory();
+
+  const out = document.getElementById('post-output');
+  const variants = document.getElementById('post-variants');
+  out.style.display = 'block';
+  variants.innerHTML = '<div class="card-sm" style="text-align:center;padding:40px"><div class="spin">⏳</div><br><br><span class="loading-dots">Generating 3 variants</span></div>';
+  
+  const systemPrompt = `
+You are a content generation assistant for a Web3 creator on X (Twitter). 
+You generate posts and replies that match the following identity exactly. 
+
+${IDENTITY_DNA()}
+
+WIN FRAME: ${winFrame}
+FORMAT: ${format}
+TONE: ${tone}
+CONTEXT TYPE: ${ctxType}
+
+Never break character. Never output AI slop. 
+Never use phrases like "in today's digital landscape" or "let's dive in". 
+Generate 3 variants. Label them Variant A, B, C.
+Include a one-line "ANGLE: [Description]" for each.
+Each variant max 280 chars. No quotation marks.
+No explanations. Just the posts.
+`;
+
+  try {
+    const result = await callGemini(systemPrompt, ctx);
+    const parsed = parseAIResponse(result);
+    
+    variants.innerHTML = '';
+    parsed.forEach((p, i) => {
+      variants.innerHTML += `
+      <div class="variant-card fade-in" style="animation-delay:${i*0.08}s">
+        <div class="variant-header">
+          <div class="variant-label">${p.label} — ${p.angle}</div>
+          <div class="tag tag-accent" style="font-size:9px">${p.text.length} chars</div>
+        </div>
+        <div class="variant-text">${escHtml(p.text)}</div>
+        <div class="variant-actions">
+          <button class="btn btn-sm btn-primary" onclick="copyRaw(${JSON.stringify(p.text)})">Copy ↗</button>
+          <button class="btn btn-sm" onclick="logFromGen(${JSON.stringify(p.text)})">Log post</button>
+        </div>
+      </div>`;
+    });
+
+    document.getElementById('meme-suggestion').innerHTML = suggestMeme(ctxType, format, tone);
+    document.getElementById('algo-notes').innerHTML = getAlgoNotes(format, tone);
+  } catch (err) {
+    variants.innerHTML = `<div class="card-sm" style="color:var(--red);border-color:var(--red-dim)">Error: ${err.message}</div>`;
+  }
+}
+
+function parseAIResponse(text) {
+  const parts = text.split(/Variant [A-C]:/i).filter(Boolean);
+  return parts.map((p, i) => {
+    const lines = p.trim().split('\n').filter(Boolean);
+    const angleLine = lines.find(l => l.toUpperCase().includes('ANGLE:'));
+    const contentLines = lines.filter(l => !l.toUpperCase().includes('ANGLE:'));
+    return {
+      label: 'Variant ' + ['A', 'B', 'C'][i],
+      angle: angleLine ? angleLine.replace(/ANGLE:/i, '').trim() : 'Unique Angle',
+      text: contentLines.join('\n').trim()
+    };
+  });
+}
+
+function suggestMeme(ctxType, format, tone){
+  const map = {
+    'personal-win': '→ Use a <b>Winning</b> meme from your vault. The meme does the bragging so the text doesn\'t have to.',
+    'ragebait': '→ Use a <b>Chaos</b> meme or a straight-faced reaction. Deadpan + chaotic visual = perfect ragebait energy.',
+    'lore': '→ Use an <b>Unbothered</b> meme at the end. The calm energy after the story is the payoff.',
+    'pov': '→ POV format hits hardest with a <b>Disappointment</b> or <b>Thinking</b> meme. The visual IS the joke.',
+    'larp': '→ Use a <b>Winning</b> or vague confident meme. Never over-explain the larp. Media does the work.',
+    'observation': '→ <b>Thinking</b> meme works here. Philosophical observation + contemplative visual = bookmark bait.',
+  };
+  const t = ctxType.split(',')[0].trim();
+  return map[t] || '→ Check your <b>Meme Vault</b> and pick the expression that matches the energy of this post. When in doubt: pick the one that would make someone quote tweet it.';
+}
+
+function getAlgoNotes(format, tone){
+  const base = '<b>Post immediately after publishing:</b> Reply to your own post with a follow-up thought or the punchline. This is +75 algo weight and makes the post feel like a thread without being one.<br><br>';
+  const tips = {
+    'ragebait': base + '<b>Ragebait tip:</b> After 30 mins, reply to the first disagreement you get. Keep it short and confident. This kicks off the reply chain that the algo rewards.',
+    'question': base + '<b>Question tip:</b> Reply to every answer in the first 30 mins. Each reply from you = +75 weight. 10 replies = 750 weight units. This is free distribution.',
+    'lore': base + '<b>Lore tip:</b> Lore posts get bookmarked. Bookmarks = +10 each. If 5 people save it = same as 100 likes. Write for the save, not the like.',
+    'pov': base + '<b>POV/meme tip:</b> If you have a video meme, posts with native video get 2s+ dwell time boost. Text + GIF = combo that stops the scroll and forces a second look.',
+  };
+  const f = format.split(',')[0].trim();
+  return tips[f] || base + '<b>General tip:</b> Post at your peak activity time (when CT is active). First 30 min engagement velocity determines total reach. If you get 3+ replies fast, it\'s going to spread.';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// REPLY GENERATION ENGINE
+// ═══════════════════════════════════════════════════════════════
+async function generateReply(){
+  const target = document.getElementById('reply-target').value.trim();
+  if(!target){ showToast('Paste the post you\'re replying to'); return; }
+
+  const postType = getPillVal('post-type-pills');
+  const angle = getPillVal('angle-pills');
+  const tone = getPillVal('reply-tone-pills');
+  const goal = getPillVal('goal-pills');
+
+  const out = document.getElementById('reply-output');
+  const variants = document.getElementById('reply-variants');
+  out.style.display = 'block';
+  variants.innerHTML = '<div class="card-sm" style="text-align:center;padding:40px"><div class="spin">⏳</div><br><br><span class="loading-dots">Generating replies</span></div>';
+
+  const systemPrompt = `
+You are a master of X (Twitter) replies. You generate replies that match the following identity and follow the Reply System rules.
+
+${IDENTITY_DNA()}
+
+REPLY SYSTEM RULES:
+1. First 5 words: Must stop the scroll. No "great post!". Start mid-thought.
+2. Length: 1–2 sentences max. Punchy and confident.
+3. No hedging: No "I think", "imo", "maybe".
+4. Goal: ${goal}
+5. Angle: ${angle}
+6. Tone: ${tone}
+7. Target Post Type: ${postType}
+
+Generate 3 variants. Label them "Short & punchy", "Value add", "Argument starter".
+No quotation marks. No explanations. Just the replies.
+`;
+
+  try {
+    const result = await callGemini(systemPrompt, target);
+    const parsed = parseReplyResponse(result);
+    
+    variants.innerHTML = '';
+    parsed.forEach((r, i) => {
+      const tagCol = ['accent', 'blue', 'red'][i];
+      const tagLab = ['punch', 'depth', 'bait'][i];
+      variants.innerHTML += `
+      <div class="variant-card fade-in" style="animation-delay:${i*0.08}s">
+        <div class="variant-header">
+          <div class="variant-label">${r.label} — ${r.text.length} chars</div>
+          <div class="tag tag-${tagCol}">${tagLab}</div>
+        </div>
+        <div class="variant-text">${escHtml(r.text)}</div>
+        <div class="variant-actions">
+          <button class="btn btn-sm btn-primary" onclick="copyRaw(${JSON.stringify(r.text)})">Copy ↗</button>
+        </div>
+      </div>`;
+    });
+  } catch (err) {
+    variants.innerHTML = `<div class="card-sm" style="color:var(--red);border-color:var(--red-dim)">Error: ${err.message}</div>`;
+  }
+}
+
+function parseReplyResponse(text) {
+  const labels = ["Short & punchy", "Value add", "Argument starter"];
+  const parts = text.split(/(?:Short & punchy|Value add|Argument starter):/i).filter(Boolean);
+  return parts.map((p, i) => ({
+    label: labels[i] || 'Variant ' + (i+1),
+    text: p.trim()
+  }));
+}
+
+function abstractify(ctx){
+  const words = ctx.split(' ').filter(w=>w.length>3);
+  if(words.length<3) return ctx.toLowerCase();
+  const key = words.slice(0,5).join(' ').toLowerCase();
+  return key;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GM GENERATOR
+// ═══════════════════════════════════════════════════════════════
+function selectGm(el, text){
+  document.querySelectorAll('.gm-option').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  STATE.gmSelected = text;
+}
+
+async function generateGm(){
+  const out = document.getElementById('gm-output');
+  const txt = document.getElementById('gm-text');
+  out.style.display = 'block';
+  txt.innerHTML = '<span class="spin">⏳</span> generating...';
+
+  const systemPrompt = `
+You are a Web3 creator who never says "gm". Generate a short, punchy opener for today.
+${IDENTITY_DNA()}
+Rules: No "gm". No fluff. 1 sentence max.
+`;
+  try {
+    const res = await callGemini(systemPrompt, "Generate a GM replacement for today.");
+    txt.textContent = res.trim();
+  } catch (err) {
+    txt.textContent = "Error: " + err.message;
+  }
+}
+
+async function generateNewMonth(){
+  const month = document.getElementById('nm-month').value || 'this month';
+  const situation = document.getElementById('nm-situation').value || 'building quietly';
+  const manifest = document.getElementById('nm-manifest').value || 'something big';
+
+  const out = document.getElementById('nm-output');
+  const txt = document.getElementById('nm-text');
+  out.style.display = 'block';
+  txt.innerHTML = '<span class="spin">⏳</span> generating...';
+
+  const systemPrompt = `
+Generate a "New Month" post for ${month}. 
+Situation: ${situation}. Manifesting: ${manifest}.
+${IDENTITY_DNA()}
+Frame it as a win. Use short sentences.
+`;
+  try {
+    const res = await callGemini(systemPrompt, "New month post");
+    txt.textContent = res.trim();
+  } catch (err) {
+    txt.textContent = "Error: " + err.message;
+  }
+}
+
+async function generateQuarter(){
+  const q = document.getElementById('q-quarter').value || 'this quarter';
+  const last = document.getElementById('q-last').value || 'slow but learning';
+  const plan = document.getElementById('q-plan').value || 'bigger moves';
+
+  const out = document.getElementById('q-output');
+  const txt = document.getElementById('q-text');
+  out.style.display = 'block';
+  txt.innerHTML = '<span class="spin">⏳</span> generating...';
+
+  const systemPrompt = `
+Generate a "Quarter" update post for ${q}. 
+Last quarter: ${last}. This quarter's plan: ${plan}.
+${IDENTITY_DNA()}
+Frame it as a win. Confident always.
+`;
+  try {
+    const res = await callGemini(systemPrompt, "Quarterly update");
+    txt.textContent = res.trim();
+  } catch (err) {
+    txt.textContent = "Error: " + err.message;
+  }
+}
+
+async function generateMilestone(){
+  const ms = document.getElementById('ms-milestone').value || 'something big';
+  const type = document.getElementById('ms-type').value;
+  const ctx = document.getElementById('ms-context').value;
+
+  const out = document.getElementById('ms-output');
+  const txt = document.getElementById('ms-text');
+  out.style.display = 'block';
+  txt.innerHTML = '<span class="spin">⏳</span> generating...';
+
+  const systemPrompt = `
+Generate a milestone post. 
+Milestone: ${ms}. Win type: ${type}. Context: ${ctx}.
+${IDENTITY_DNA()}
+Frame it as a major W. Short sentences.
+`;
+  try {
+    const res = await callGemini(systemPrompt, "Milestone post");
+    txt.textContent = res.trim();
+  } catch (err) {
+    txt.textContent = "Error: " + err.message;
+  }
+}
+
+async function generateCustomEvent(){
+  const ev = document.getElementById('ce-event').value;
+  if(!ev){ showToast('Describe the event first'); return; }
+  const tone = document.getElementById('ce-tone').value;
+  const win = document.getElementById('ce-win').value;
+
+  const out = document.getElementById('ce-output');
+  const txt = document.getElementById('ce-text');
+  out.style.display = 'block';
+  txt.innerHTML = '<span class="spin">⏳</span> generating...';
+
+  const systemPrompt = `
+Generate a post for this event: "${ev}".
+Tone: ${tone}. Win frame: ${win}.
+${IDENTITY_DNA()}
+Keep it punchy. No AI slop.
+`;
+  try {
+    const res = await callGemini(systemPrompt, ev);
+    txt.textContent = res.trim();
+  } catch (err) {
+    txt.textContent = "Error: " + err.message;
+  }
+}
+
+function switchGmTab(id, el){
+  document.querySelectorAll('.gm-tab').forEach(t=>t.style.display='none');
+  document.querySelectorAll('.inner-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).style.display='block';
+  el.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MEME VAULT
+// ═══════════════════════════════════════════════════════════════
+async function uploadMemeToCloudinary(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", CONFIG.CLOUDINARY_PRESET);
+  
+  const res = await fetch(
+    `https://api.cloudinary.com/v1_1/${CONFIG.CLOUDINARY_CLOUD_NAME}/auto/upload`,
+    { method: "POST", body: formData }
+  );
+  
+  if (!res.ok) throw new Error("Upload failed");
+  const data = await res.json();
+  return { url: data.secure_url, type: data.resource_type === 'video' ? 'video/mp4' : 'image/png' };
+}
+
+async function handleMemeUpload(input){
+  const files = [...input.files];
+  if(!files.length) return;
+  
+  showToast('Uploading...');
+  
+  for(const file of files) {
+    try {
+      const { url, type } = await uploadMemeToCloudinary(file);
+      STATE.pendingMeme = { data: url, name: file.name, type: type };
+      document.getElementById('meme-tag-modal').style.display='block';
+      // If uploading multiple, we just tag the first one properly for now, or you can loop
+      break; 
+    } catch (err) {
+      showToast('Upload failed: ' + err.message);
+    }
+  }
+  input.value='';
+}
+
+function saveMemeTag(){
+  if(!STATE.pendingMeme) return;
+  const expr = getPillVal('meme-expr-pills') || 'other';
+  const label = document.getElementById('meme-tag-name').value || STATE.pendingMeme.name;
+  STATE.memes.push({ ...STATE.pendingMeme, expr, label });
+  saveState();
+  STATE.pendingMeme = null;
+  document.getElementById('meme-tag-modal').style.display='none';
+  document.getElementById('meme-tag-name').value='';
+  renderMemeGrid();
+}
+
+function cancelMemeTag(){
+  STATE.pendingMeme = null;
+  document.getElementById('meme-tag-modal').style.display='none';
+}
+
+function deleteMeme(idx){
+  STATE.memes.splice(idx,1);
+  saveState(); renderMemeGrid();
+}
+
+function filterMemes(expr, el){
+  document.querySelectorAll('.inner-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderMemeGrid(expr);
+}
+
+function renderMemeGrid(filter='all'){
+  const grid = document.getElementById('meme-grid');
+  const memes = filter==='all' ? STATE.memes : STATE.memes.filter(m=>m.expr===filter);
+
+  let html = '';
+  memes.forEach((m,i)=>{
+    const realIdx = STATE.memes.indexOf(m);
+    const isVideo = m.type && m.type.startsWith('video');
+    const media = isVideo
+      ? `<video src="${m.data}" muted loop autoplay style="width:100%;height:100%;object-fit:cover;border-radius:4px"></video>`
+      : `<img src="${m.data}" alt="${m.label}">`;
+    html += `<div class="meme-slot filled">
+      ${media}
+      <button class="meme-del" onclick="deleteMeme(${realIdx})">✕</button>
+      <div class="meme-label">${m.label}</div>
+    </div>`;
+  });
+
+  // Add slot
+  html += `<div class="meme-slot" onclick="document.getElementById('meme-upload').click()">
+    <div class="meme-add-icon">+</div>
+    <div class="meme-add-text">Add meme</div>
+  </div>`;
+
+  grid.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TRACKER
+// ═══════════════════════════════════════════════════════════════
+function logPost(){
+  const content = document.getElementById('log-content').value.trim();
+  if(!content){ showToast('Add post content'); return; }
+  const entry = {
+    content,
+    format: document.getElementById('log-format').value,
+    likes: parseInt(document.getElementById('log-likes').value)||0,
+    replies: parseInt(document.getElementById('log-replies').value)||0,
+    impressions: parseInt(document.getElementById('log-impressions').value)||0,
+    worked: document.getElementById('log-worked').value,
+    notes: document.getElementById('log-notes').value,
+    ts: Date.now()
+  };
+  STATE.postLog.unshift(entry);
+  saveState();
+  document.getElementById('log-content').value='';
+  document.getElementById('log-likes').value='';
+  document.getElementById('log-replies').value='';
+  document.getElementById('log-impressions').value='';
+  document.getElementById('log-notes').value='';
+  renderTracker();
+  showToast('post logged');
+}
+
+function clearLog(){
+  if(confirm('Clear all logged posts?')){ STATE.postLog=[]; saveState(); renderTracker(); }
+}
+
+function logFromGen(text){
+  document.getElementById('log-content').value=text;
+  showPage('tracker');
+}
+
+function renderTracker(){
+  const log = STATE.postLog;
+  document.getElementById('stat-posts').textContent = log.length;
+
+  if(log.length){
+    const avgLikes = Math.round(log.reduce((s,p)=>s+p.likes,0)/log.length);
+    document.getElementById('stat-avg').textContent = avgLikes;
+
+    // Best format
+    const fmtCount = {};
+    log.forEach(p=>{ if(p.worked==='banger'||p.worked==='good'){ fmtCount[p.format]=(fmtCount[p.format]||0)+1; } });
+    const best = Object.entries(fmtCount).sort((a,b)=>b[1]-a[1])[0];
+    document.getElementById('stat-best-format').textContent = best ? best[0].split(' ')[0] : '–';
+  }
+
+  const container = document.getElementById('post-log');
+  if(!log.length){
+    container.innerHTML='<div style="text-align:center;padding:32px;color:var(--muted2);font-size:12px;font-family:var(--font-mono)">No posts logged yet</div>';
+    return;
+  }
+
+  container.innerHTML = log.map((p,i)=>{
+    const score = p.likes + p.replies*13;
+    const maxScore = Math.max(...log.map(x=>x.likes+x.replies*13));
+    const pct = maxScore ? Math.round((score/maxScore)*100) : 0;
+    const col = p.worked==='banger' ? 'var(--accent)' : p.worked==='good' ? 'var(--blue)' : p.worked==='mid' ? 'var(--orange)' : 'var(--red)';
+    const date = new Date(p.ts).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+    return `<div class="perf-row">
+      <div class="perf-content" title="${p.content}">${p.content.substring(0,60)}${p.content.length>60?'...':''}</div>
+      <div class="perf-num" style="color:${col}">${p.likes}♥ ${p.replies}↩</div>
+      <div><div class="perf-bar-wrap"><div class="perf-bar" style="width:${pct}%;background:${col}"></div></div></div>
+      <div class="perf-num" style="color:var(--muted);font-size:10px">${date}</div>
+    </div>`;
+  }).join('');
+
+  // Pattern analysis
+  if(log.length >= 3){
+    const bangers = log.filter(p=>p.worked==='banger');
+    const flops = log.filter(p=>p.worked==='flop');
+    const topFormat = Object.entries(log.reduce((acc,p)=>{acc[p.format]=(acc[p.format]||[]); acc[p.format].push(p.likes); return acc},{} ))
+      .map(([f,ls])=>({f, avg: ls.reduce((s,x)=>s+x,0)/ls.length}))
+      .sort((a,b)=>b.avg-a.avg)[0];
+
+    document.getElementById('pattern-analysis').innerHTML = `
+      <span style="color:var(--accent)">Bangers:</span> ${bangers.length} / ${log.length} posts.<br>
+      <span style="color:var(--red)">Flops:</span> ${flops.length} posts. ${flops.length>bangers.length?'<span style="color:var(--orange)">More flops than bangers — adjust format or timing.</span>':''}<br>
+      <span style="color:var(--blue)">Best format so far:</span> ${topFormat ? topFormat.f + ' (avg ' + Math.round(topFormat.avg) + ' likes)' : 'Need more data'}<br>
+      <span style="color:var(--muted)">Pattern tip:</span> ${getBestPatternTip(log)}
+    `;
+  }
+}
+
+function getBestPatternTip(log){
+  const bangers = log.filter(p=>p.worked==='banger');
+  if(!bangers.length) return 'Post consistently for 7 days before optimizing. Volume comes first.';
+  const formats = bangers.map(p=>p.format);
+  const mode = formats.sort((a,b)=>formats.filter(v=>v===a).length-formats.filter(v=>v===b).length).pop();
+  return `Your bangers tend to be <b style="color:var(--text)">${mode}</b> format. Double down on this format.`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// IDENTITY
+// ═══════════════════════════════════════════════════════════════
+function addRule(){
+  const r = document.getElementById('new-rule').value.trim();
+  if(!r) return;
+  STATE.neverDo.push(r);
+  saveState();
+  renderNeverDo();
+  document.getElementById('new-rule').value='';
+}
+
+function renderNeverDo(){
+  const list = document.getElementById('never-do-list');
+  list.innerHTML = STATE.neverDo.map((r,i)=>`
+    <div class="identity-chip">
+      <span class="dot" style="background:var(--red)"></span>
+      ${r}
+      <span style="margin-left:4px;cursor:pointer;color:var(--muted2);font-size:10px" onclick="removeRule(${i})">✕</span>
+    </div>`).join('');
+}
+
+function removeRule(i){
+  STATE.neverDo.splice(i,1);
+  saveState(); renderNeverDo();
+}
+
+function addContextFeed(){
+  const t = document.getElementById('ctx-feed-input').value.trim();
+  if(!t) return;
+  STATE.ctxFeed.unshift({ text: t, ts: Date.now() });
+  saveState();
+  document.getElementById('ctx-feed-input').value='';
+  renderCtxFeed();
+  renderIdentitySummary();
+  showToast('added to feed');
+}
+
+function renderCtxFeed(){
+  const list = document.getElementById('ctx-feed-list');
+  if(!STATE.ctxFeed.length){ list.innerHTML='<div style="font-size:11px;color:var(--muted2);font-family:var(--font-mono)">No context added yet</div>'; return; }
+  list.innerHTML = STATE.ctxFeed.slice(0,10).map((c,i)=>`
+    <div class="ctx-item">
+      <div class="ctx-item-text">${c.text.substring(0,120)}${c.text.length>120?'...':''}</div>
+      <div class="ctx-item-meta">${new Date(c.ts).toLocaleDateString()}<br>
+        <span style="cursor:pointer;color:var(--red)" onclick="removeCtxFeed(${i})">remove</span>
+      </div>
+    </div>`).join('');
+}
+
+function removeCtxFeed(i){
+  STATE.ctxFeed.splice(i,1);
+  saveState(); renderCtxFeed();
+}
+
+function renderIdentitySummary(){
+  const voice = getPillVal('voice-pills') || 'casual english';
+  const persona = getPillVal('persona-pills') || 'winning guy';
+  const niche = getPillVal('niche-pills') || 'web3, design';
+  const rules = STATE.neverDo;
+  const feedCount = STATE.ctxFeed.length;
+
+  document.getElementById('identity-summary').innerHTML = `
+    <span style="color:var(--text)">Voice:</span> ${voice}<br>
+    <span style="color:var(--text)">Persona:</span> ${persona}<br>
+    <span style="color:var(--text)">Niche:</span> ${niche}<br>
+    <span style="color:var(--text)">Rules:</span> ${rules.join(' · ')}<br>
+    <span style="color:var(--text)">Context feed:</span> ${feedCount} references loaded<br>
+    <br>
+    <span style="color:var(--muted)">The machine uses all of the above to keep your voice consistent. Every post generated checks against your rules and references your context feed. The more you add, the less it sounds like AI.</span>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CONTEXT HISTORY
+// ═══════════════════════════════════════════════════════════════
+function renderCtxHistory(){
+  const container = document.getElementById('ctx-history');
+  if(!STATE.ctxHistory.length){
+    container.innerHTML='<div style="font-size:11px;color:var(--muted2);font-family:var(--font-mono)">No context history yet</div>';
+    return;
+  }
+  container.innerHTML = STATE.ctxHistory.slice(0,5).map(c=>`
+    <div class="ctx-item">
+      <div class="ctx-item-text">${c.text.substring(0,100)}${c.text.length>100?'...':''}</div>
+      <div class="ctx-item-meta" style="font-size:10px;white-space:nowrap">${c.type}<br>${new Date(c.ts).toLocaleDateString()}</div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2000);
+}
+function copyRaw(text){
+  navigator.clipboard.writeText(text).then(()=>showToast('copied'));
+}
+function copyText(id){
+  const el = document.getElementById(id);
+  navigator.clipboard.writeText(el.textContent).then(()=>showToast('copied'));
+}
+function clearPostInputs(){
+  document.getElementById('post-context').value='';
+  document.getElementById('post-output').style.display='none';
+  document.getElementById('ctx-char').textContent='0 / 280';
+}
+function clearReplyInputs(){
+  document.getElementById('reply-target').value='';
+  document.getElementById('reply-output').style.display='none';
+}
+function escHtml(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+initPills();
+renderCtxHistory();
+renderMemeGrid();
+renderCtxFeed();
+renderNeverDo();
+renderTracker();
+</script>
+</body>
+</html>
